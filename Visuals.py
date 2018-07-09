@@ -17,7 +17,7 @@ from sklearn.neighbors.nearest_centroid import NearestCentroid
 
 from matplotlib.offsetbox import *
 
-movements = {
+ART_MOVEMENTS = {
         "Personal Portfolio": ([
                                 ('Personal Portfolio 08 - 10', "#ad1818"),
                                 ('Personal Portfolio 12 - 15', "#d60a0a"),
@@ -54,9 +54,9 @@ movements = {
                    , "#182d56")
     }
 
-color_groups = movements
+color_groups = ART_MOVEMENTS
 all_artists = []
-for m in movements.values():
+for m in ART_MOVEMENTS.values():
     for art, _ in m[0]:
         all_artists.append(art)
 
@@ -71,7 +71,7 @@ def parse_path(path):
     artist_path, im_name = path.split("/patches3/automated/")
     return os.path.join( artist_path, im_name[:-5])
 
-def training_scatter():
+def trainingVisualization(data, targets):
     """
     Visual the data of all the training artists used to create the original mapping.
     """
@@ -89,7 +89,7 @@ def training_scatter():
     for group in color_groups:
         # if "Portfolio" not in group:
         #     continue
-        for artist, color in movements[group][0]:
+        for artist, color in ART_MOVEMENTS[group][0]:
             leg.append(artist)
             indices = np.where(targets == artist)[0]
             group_data = data[indices]
@@ -98,7 +98,7 @@ def training_scatter():
             z = np.median(group_data[..., 2])
             medians[artist] = np.array((x, y, z))
             ax.scatter(x, y, z,
-                       edgecolors=movements[group][1],
+                       edgecolors=ART_MOVEMENTS[group][1],
                        facecolors=color,
                        lw=0.5,
                        alpha=0.9,
@@ -112,14 +112,14 @@ def training_scatter():
         a = ALPHA_LOW if "Portfolio" not in group else ALPHA_SEMI
         # if "Portfolio" not in group:
         #     continue
-        for artist, color in movements[group][0]:
+        for artist, color in ART_MOVEMENTS[group][0]:
             leg.append(artist)
             indices = np.where(targets == artist)[0]
             group_data = data[indices]
             gen_scatters.append(ax.scatter(group_data[..., 0],
                                            group_data[..., 1],
                                            group_data[..., 2],
-                                           edgecolors=movements[group][1],
+                                           edgecolors=ART_MOVEMENTS[group][1],
                                            facecolors=color,
                                            lw=0.5,
                                            alpha=a,
@@ -150,7 +150,7 @@ def training_scatter():
 
     plt.show()
 
-def Centroid():
+def centroidVisualization(data, targets, src_paths, legend_path="presentation/pie legend.png"):
     """
     Visualize the new data (Personal Portfolio) on the mapping of all the artists, by coloring the new data points with
     the artist's colors. The centroid decides for each data point which artist is fits to, and then a tally is performed
@@ -163,7 +163,7 @@ def Centroid():
     ax = fig.add_subplot(122, projection='3d')
     ax_im = fig.add_subplot(221)
     ax_legend = fig.add_subplot(223)
-    ax_legend.imshow(plt.imread("presentation/pie legend.png"))
+    ax_legend.imshow(plt.imread(legend_path))
 
     ax_im.grid(False)
     ax_legend.grid(False)
@@ -222,7 +222,7 @@ def Centroid():
     leg = []
     gen_scatters = []
 
-    for movement in movements.values():
+    for movement in ART_MOVEMENTS.values():
         for artist, color in movement[0]:
             leg += [artist]
             result_indices = np.where(res == artist)[0]
@@ -241,7 +241,7 @@ def Centroid():
     #            bbox_transform=plt.gcf().transFigure)
 
     scatters = []
-    for movement in movements.values():
+    for movement in ART_MOVEMENTS.values():
         for artist, color in movement[0]:
             leg += [artist]
             result_indices = np.where(res == artist)[0]
@@ -281,38 +281,26 @@ def Centroid():
 
     plt.show()
 
-def demo():
-    Centroid()
+
+
+
 
 if __name__ == '__main__':
-
-
     DATA_FILE = "pca_models/pca_2src,num_of_artists=23,strategy1=hist_descauto_desc.npyfix.npy,strategy2=canny_descauto_desc.npyfix.npy"
     # load data
     data = np.load(DATA_FILE)
     targets = np.load(DATA_FILE + "targets.npy")
     src_paths = np.load(DATA_FILE + "src_paths.npy").astype(np.str)
 
-    color_groups = movements
+    color_groups = ART_MOVEMENTS
     all_artists = []
-    for m in movements.values():
+    for m in ART_MOVEMENTS.values():
         for art, _ in m[0]:
             all_artists.append(art)
 
+    trainingVisualization(data, targets)
+    centroidVisualization(data, targets, src_paths)
 
-    demo()
-    # training_scatter()
-
-    # for i, im_path in enumerate(unique_im_paths):
-    #     x, y, z = im_coords[i]
-    #     img = io.imread(im_path)
-    #     im = OffsetImage(img, zoom=0.02)
-    #     ab = AnnotationBbox(im, (x, y),  frameon=False)
-    #     ax.scatter(x, y, z)
-    #     ax.add_artist(ab)
-
-
-    # plt.show()
 
 
 
