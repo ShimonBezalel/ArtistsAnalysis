@@ -1,4 +1,4 @@
-from Visuals import ART_MOVEMENTS, centroidVisualization, trainingVisualization
+from Visuals import ART_MOVEMENTS, setup, centroidVisualization, trainingVisualization, nearestNeighborsVisualization
 import numpy as np
 
 DATA_FILE   = "demo_data"
@@ -6,8 +6,14 @@ DATA_EXT    = ".npy"
 LEGEND_PATH = "pie_legend.png"
 
 def demo(data, targets, src_paths, legend_path ):
+    setup(data, targets, src_paths)
+
     trainingVisualization(data, targets)
+    trainingVisualization(data, targets, True)
+
     centroidVisualization(data, targets, src_paths, legend_path)
+    nearestNeighborsVisualization(data, targets, src_paths, legend_path)
+
 
 
 if __name__ == '__main__':
