@@ -8,7 +8,6 @@ Author: Shimon Heimowitz
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, ArtistAnimation
-import time
 from mpl_toolkits.mplot3d import Axes3D
 import mpl_toolkits.mplot3d.axes3d
 from skimage import io
@@ -214,23 +213,8 @@ def centroidVisualization(data, targets, src_paths, legend_path="presentation/pi
     ax.set_zlabel('Canny Component', fontsize=15)
     ax.set_title('Portfolio Analysis Using Centroid Clustering', fontsize=20)
 
-    # my_indices = np.where(is_portfolio(targets))[0]
-
     clf = NearestCentroid()
-    # training_data = data[np.where(np.bitwise_not(is_portfolio(targets)))[0]]
-    # labels = targets[np.where(np.bitwise_not(is_portfolio(targets)))[0]]
-
-    # test_data = data[my_indices]
-
     clf.fit(training_data, labels)
-
-    # im_paths = src_paths[my_indices]
-    # im_coords = data[my_indices]
-    # ind = np.argsort(im_paths)
-    # s_im_paths = im_paths[ind]
-    # s_im_coords = im_coords[ind]
-
-    # unique_im_paths, unique_indices = np.unique(list(map(parse_path, s_im_paths)), return_index=True)
     dest_coords = s_im_coords[unique_indices]
 
     print("Calculating Centroids...")
@@ -398,10 +382,6 @@ def nearestNeighborsVisualization(data, targets, src_paths, legend_path="present
                        alpha=0.98,
                        s=30
                        ))
-    # ax_legend.legend(labels=leg)
-    # ax_legend.legend(labels=leg, loc='upper right', bbox_to_anchor=(1, 1), ncol=1,
-    #            bbox_transform=plt.gcf().transFigure)
-
     scatters = []
     for movement in ART_MOVEMENTS.values():
         for artist, color in movement[0]:
@@ -438,8 +418,6 @@ def nearestNeighborsVisualization(data, targets, src_paths, legend_path="present
 
     fig.canvas.mpl_connect("motion_notify_event", hover)
     connection_id = fig.canvas.mpl_connect('button_press_event', swap)
-    # animation = FuncAnimation(fig, update, interval=1)
-    # animation = ArtistAnimation(fig, image_dict.values(), interval=100, repeat=True)
 
     plt.show()
     plt.close(fig)
